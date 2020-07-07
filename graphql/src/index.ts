@@ -4,6 +4,7 @@ import * as express from 'express';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { UserResolver } from './users/user-resolver';
+import { ProductResolver } from './products/product-resolver';
 
 // Initialize an apollo server instance
 const bootstrap = async () => {
@@ -13,7 +14,7 @@ const bootstrap = async () => {
 
     // Build TypeGraphQL executable schema
     const schema = await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, ProductResolver],
     });
 
     // Create GraphQL server
