@@ -1,4 +1,4 @@
-import { Query, Arg, Mutation, Resolver } from 'type-graphql';
+import { Query, Arg, Mutation, Resolver, Authorized } from 'type-graphql';
 import { Product } from '../entities/product';
 import { ApolloError } from 'apollo-server-express';
 import { CreateProductInput } from './types/create-product-input';
@@ -18,10 +18,10 @@ export class ProductResolver {
   }
 
   // Filter products with keyword
-  // Paginate product array
+  // Paginate product list
   @Query(() => [Product])
   async products(
-    @Arg('input', { defaultValue: { filter: null, price: null } })
+    @Arg('input')
     { filter }: FindProductsInput,
     @Arg('pagination', { defaultValue: { skip: 0, take: 5 } })
     { skip, take }: PaginationInput
@@ -41,6 +41,7 @@ export class ProductResolver {
   }
 
   @Mutation(() => Product)
+  @Authorized('admin', 'manager') // only manager and admin and add new products
   async createProduct(
     @Arg('input')
     { title, description, price, count }: CreateProductInput
