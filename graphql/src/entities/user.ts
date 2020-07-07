@@ -7,15 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ObjectType, Field, ID, Root } from 'type-graphql';
+import { UserRole } from '../users/types/user-role';
 
-export enum UserRole {
-  ADMIN = 'admin',
-  MANAGER = 'manager', // can add products
-  CUSTOMER = 'customer', // can purchase
-  GUEST = 'guest', // can view shop pages
-}
-
-// Create a database table `User`
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -30,6 +23,13 @@ export class User extends BaseEntity {
   @Field()
   @Column()
   lastName: string;
+
+  // GraphQL schema
+  // Resolve the `name` field for the User type
+  @Field()
+  name(@Root() parent: User): string {
+    return `${parent.firstName} ${parent.lastName}`;
+  }
 
   @Field()
   @Column({ unique: true, length: 255 })
@@ -50,13 +50,6 @@ export class User extends BaseEntity {
   @Field()
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  // GraphQL schema
-  // Resolve the `name` field for the User type
-  @Field()
-  name(@Root() parent: User): string {
-    return `${parent.firstName} ${parent.lastName}`;
-  }
 
   // Database column
   // Cannot be queried by client
