@@ -25,7 +25,10 @@ const bootstrap = async () => {
     const apolloServer = new ApolloServer({
       schema,
       context: ({ req, res }: ExpressContext) => {
-        const tokenPayload = verifyToken(req);
+        const tokenPayload = verifyToken(
+          req,
+          <string>process.env.ACCESS_TOKEN_SECRET
+        );
         return {
           ...tokenPayload,
           req,

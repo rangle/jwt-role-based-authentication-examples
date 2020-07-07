@@ -73,7 +73,11 @@ export class UserResolver {
 
     const { id, role } = existingUser;
 
-    const accessToken = createAccessToken(id, role);
+    const accessToken = createAccessToken(
+      id,
+      role,
+      <string>process.env.ACCESS_TOKEN_SECRET
+    );
 
     return {
       user: existingUser,

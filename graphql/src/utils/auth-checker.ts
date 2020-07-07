@@ -1,5 +1,5 @@
 import { AuthChecker } from 'type-graphql';
-import { AppContext } from '../shared/app-context';
+import { AppContext } from '../types/app-context';
 
 export const authChecker: AuthChecker<AppContext> = (
   { context: { userId, role } },

@@ -3,8 +3,9 @@ import { Product } from '../entities/product';
 import { ApolloError } from 'apollo-server-express';
 import { CreateProductInput } from './types/create-product-input';
 import { FindProductsInput } from './types/find-products-input';
-import { PaginationInput } from '../shared/pagination-input';
+import { PaginationInput } from '../types/pagination-input';
 import { Like } from 'typeorm';
+import { DeleteProductResponse } from './types/delete-product-response';
 
 @Resolver()
 export class ProductResolver {
@@ -57,5 +58,29 @@ export class ProductResolver {
       throw new ApolloError('Failed to create user.', 'FAILED TO CREATE');
     }
     return newProduct;
+  }
+
+  @Mutation(() => DeleteProductResponse)
+  @Authorized('admin', 'manager') // only manager and admin and delete products
+  async deleteProduct(@Arg('id') id: string): Promise<DeleteProductResponse> {
+    const product = await Product.findOne(id);
+
+    if (!product) {
+      throw new ApolloError(`Product ${id} does not exist`, 'FAILED TO DELETE');
+    }
+
+    try {
+      await Product.delete(id);
+    } catch (error) {
+      throw new ApolloError(
+        `Failed to delete product ${id}`,
+        'FAILED TO DELETE'
+      );
+    }
+
+    return {
+      message: 'Product deleted',
+      id,
+    };
   }
 }
