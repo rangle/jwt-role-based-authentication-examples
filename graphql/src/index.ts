@@ -4,6 +4,10 @@ import * as express from 'express';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { UserResolver } from './users/user-resolver';
+import { ProductResolver } from './products/product-resolver';
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import { authChecker } from './utils/auth-checker';
+import { verifyToken } from './utils/verify-token';
 
 // Initialize an apollo server instance
 const bootstrap = async () => {
@@ -13,11 +17,25 @@ const bootstrap = async () => {
 
     // Build TypeGraphQL executable schema
     const schema = await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, ProductResolver],
+      authChecker, // register auth checking function
     });
 
     // Create GraphQL server
-    const apolloServer = new ApolloServer({ schema });
+    const apolloServer = new ApolloServer({
+      schema,
+      context: ({ req, res }: ExpressContext) => {
+        const tokenPayload = verifyToken(
+          req,
+          <string>process.env.ACCESS_TOKEN_SECRET
+        );
+        return {
+          ...tokenPayload,
+          req,
+          res,
+        };
+      },
+    });
 
     const app = express();
 
