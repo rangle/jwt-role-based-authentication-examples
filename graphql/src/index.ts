@@ -24,6 +24,14 @@ const bootstrap = async () => {
     // Create GraphQL server
     const apolloServer = new ApolloServer({
       schema,
+      engine: {
+        debugPrintReports: true,
+      },
+      playground: {
+        settings: {
+          'request.credentials': 'include',
+        },
+      },
       context: ({ req, res }: ExpressContext) => {
         const tokenPayload = verifyToken(
           req,
