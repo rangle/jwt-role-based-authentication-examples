@@ -10,7 +10,7 @@ import { DeleteProductResponse } from './types/delete-product-response';
 @Resolver()
 export class ProductResolver {
   @Query(() => Product)
-  async product(@Arg('id') id: string) {
+  async product(@Arg('id') id: string): Promise<Product> {
     const selectedProduct = await Product.findOne(id);
     if (!selectedProduct) {
       throw new ApolloError('Product not found.', 'NOT FOUND');
@@ -26,7 +26,7 @@ export class ProductResolver {
     { filter }: FindProductsInput,
     @Arg('pagination', { defaultValue: { skip: 0, take: 5 } })
     { skip, take }: PaginationInput
-  ) {
+  ): Promise<Product[]> {
     const where = filter
       ? [{ title: Like(`%${filter}%`) }, { description: Like(`%${filter}%`) }]
       : [];

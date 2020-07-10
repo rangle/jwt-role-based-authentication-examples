@@ -55,4 +55,11 @@ export class User extends BaseEntity {
   // Cannot be queried by client
   @Column()
   password: string;
+
+  // Current version of the refresh token
+  @Column({
+    type: 'int',
+    default: 0,
+  })
+  tokenVersion: number;
 }

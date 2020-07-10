@@ -6,8 +6,3 @@ export enum UserRole {
   CUSTOMER = 'customer',
   GUEST = 'guest',
 }
-
-registerEnumType(UserRole, {
-  name: 'UserRole',
-  description: 'All user roles',
-});

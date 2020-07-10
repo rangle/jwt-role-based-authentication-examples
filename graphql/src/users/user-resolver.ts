@@ -1,11 +1,12 @@
-import { Resolver, Query, Mutation, Arg } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../entities/user';
 import { RegisterInput } from './types/register-input';
 import { ApolloError, AuthenticationError } from 'apollo-server-express';
 import { LoginResponse } from './types/login-response';
 import { LoginInput } from './types/login-input';
-import { createAccessToken } from '../utils/create-tokens';
+import { createAccessToken, createRefreshToken } from '../utils/create-tokens';
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 
 @Resolver()
 export class UserResolver {
@@ -57,7 +58,8 @@ export class UserResolver {
 
   @Mutation(() => LoginResponse)
   async loginUser(
-    @Arg('input') { email, password }: LoginInput
+    @Arg('input') { email, password }: LoginInput,
+    @Ctx() ctx: ExpressContext
   ): Promise<LoginResponse> {
     const existingUser = await User.findOne({ email });
 
@@ -71,13 +73,25 @@ export class UserResolver {
       throw new AuthenticationError('Username or password is invalid');
     }
 
-    const { id, role } = existingUser;
+    const { id, role, tokenVersion } = existingUser;
 
     const accessToken = createAccessToken(
       id,
       role,
       <string>process.env.ACCESS_TOKEN_SECRET
     );
+
+    const refreshToken = createRefreshToken(
+      id,
+      tokenVersion,
+      <string>process.env.REFRESH_TOKEN_SECRET
+    );
+
+    ctx.res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days - express accepts token maxAge in ms, therefore multiply by 1000
+      path: '/refresh-token', // attach the refreshToken only to this endpoint
+    });
 
     return {
       user: existingUser,

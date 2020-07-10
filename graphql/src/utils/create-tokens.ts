@@ -7,3 +7,11 @@ export const createAccessToken = (
 ) => {
   return sign({ userId, role }, secret, { expiresIn: '15m' });
 };
+
+export const createRefreshToken = (
+  userId: number,
+  tokenVersion: number,
+  secret: string
+) => {
+  return sign({ userId, tokenVersion }, secret, { expiresIn: '7d' });
+};
