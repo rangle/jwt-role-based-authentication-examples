@@ -13,5 +13,5 @@ export const createRefreshToken = (
   tokenVersion: number,
   secret: string
 ) => {
-  return sign({ userId }, secret, { expiresIn: '7d' });
+  return sign({ userId, tokenVersion }, secret, { expiresIn: '7d' });
 };

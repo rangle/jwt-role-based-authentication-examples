@@ -90,7 +90,7 @@ export class UserResolver {
     ctx.res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days - express accepts token maxAge in ms, therefore multiply by 1000
-      // path: '/refresh_token', // attach the refreshToken only to this endpoint
+      path: '/refresh-token', // attach the refreshToken only to this endpoint
     });
 
     return {

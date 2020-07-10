@@ -20,6 +20,6 @@ export class RegisterInput implements Partial<User> {
   @Field()
   password: string;
 
-  @Field(() => UserRole)
+  @Field()
   role: UserRole;
 }
