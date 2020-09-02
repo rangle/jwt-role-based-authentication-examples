@@ -1,14 +1,9 @@
 import { verify } from 'jsonwebtoken';
 import { Request } from 'express';
 import { UserRole } from '../users/types/user-role';
-import { refreshTokens } from './refresh-tokens';
 import { AccessTokenPayload } from '../types/tokens';
 
-export const verifyAccessToken = async (
-  req: Request,
-  accessSecret: string,
-  refreshSecret: string
-) => {
+export const verifyAccessToken = async (req: Request, accessSecret: string) => {
   const bearerHeader = req.headers.authorization;
 
   let guestPayload = {
