@@ -1,5 +1,5 @@
 {
-  "name": "register-login-user-graphql-example",
+  "name": "jwt-auth-graphql-example",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
