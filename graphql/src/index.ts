@@ -39,8 +39,7 @@ const bootstrap = async () => {
       context: async ({ req, res }: ExpressContext) => {
         const tokenPayload = await verifyAccessToken(
           req,
-          <string>process.env.ACCESS_TOKEN_SECRET,
-          <string>process.env.REFRESH_TOKEN_SECRET
+          <string>process.env.ACCESS_TOKEN_SECRET
         );
 
         return {

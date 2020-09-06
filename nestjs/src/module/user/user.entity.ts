@@ -33,13 +33,17 @@ export class User {
   })
   role: UserRole;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', select: false })
   createdAt: Date;
 
-  @CreateDateColumn({ name: 'updated_at' })
+  @CreateDateColumn({ name: 'updated_at', select: false })
   updatedAt: Date;
 
   @Column({ select: false })
-  @Column()
   password: string;
+
+  @Column({
+    default: 0,
+  })
+  tokenVersion: number;
 }

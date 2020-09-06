@@ -7,6 +7,7 @@ import mysqlDB from 'src/config/mysqlDB.config';
 import { AppService } from './app.service';
 import { ProductModule } from './module/product/product.module';
 import { UserModule } from './module/user/user.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserModule } from './module/user/user.module';
     }),
     ProductModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

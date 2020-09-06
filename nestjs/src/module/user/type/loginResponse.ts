@@ -1,9 +1,6 @@
-import { UserRole } from '../user.entity';
+import { UserResponse } from './userResponse';
 
-export class LoginResponse {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: UserRole;
+export interface LoginResponse {
+  user: UserResponse;
+  accessToken: string;
 }
