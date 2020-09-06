@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { RegisterUserDto } from './dto/registerUser.dto';
+import { RegisterUserDto } from '../auth/dto/registerUser.dto';
+import { UserResponse } from './type/userResponse';
 
 @Injectable()
 export class UserService {
@@ -23,19 +24,29 @@ export class UserService {
 
   async findUserWithPassword(email: string): Promise<User> {
     return await this.userRepository.findOne({
-      select: ['id', 'firstName', 'lastName', 'email', 'role', 'password'],
+      select: [
+        'id',
+        'firstName',
+        'lastName',
+        'email',
+        'role',
+        'tokenVersion',
+        'password',
+      ],
       where: { email },
     });
   }
 
-  async findOneById(id: string): Promise<User> {
+  async findOneById(id: number): Promise<UserResponse> {
     return await this.userRepository.findOne({
       where: { id },
     });
   }
 
-  async create(user: RegisterUserDto): Promise<User> {
+  async create(user: RegisterUserDto): Promise<UserResponse> {
     const newUser = await this.userRepository.create(user);
-    return await this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
+    const { password, createdAt, updatedAt, ...userResult } = newUser;
+    return userResult;
   }
 }

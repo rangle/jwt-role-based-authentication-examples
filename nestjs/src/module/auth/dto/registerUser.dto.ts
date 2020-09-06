@@ -1,4 +1,4 @@
-import { UserRole } from '../user.entity';
+import { UserRole } from '../../user/user.entity';
 
 export class RegisterUserDto {
   firstName: string;
