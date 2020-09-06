@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 
 import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
+import { RolesGuard } from './module/auth/guard/role.guard';
 
 const PORT = process.env.PORT || 3000;
 

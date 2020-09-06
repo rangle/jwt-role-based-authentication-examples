@@ -28,7 +28,6 @@ const bootstrap = async () => {
     const apolloServer = new ApolloServer({
       schema,
       formatError: (error) => {
-        console.log(error);
         return error;
       },
       playground: {
@@ -56,7 +55,6 @@ const bootstrap = async () => {
 
     app.get('/refresh-token', async (req, res) => {
       const token = req.cookies['refreshToken'];
-      console.log('refresh token is', token);
       const decodedResult = await refreshTokens(
         token,
         <string>process.env.ACCESS_TOKEN_SECRET,
